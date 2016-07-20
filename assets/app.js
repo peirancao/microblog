@@ -1,6 +1,11 @@
 Vue.config.debug = true;
 Vue.config.devtools = true;
 
+var timeago = timeago();
+Vue.filter('timeago', function (value) {
+  return timeago.format(value);
+});
+
 var ref = new Wilddog("https://microblog.wilddogio.com/");
 
 ref.authWithPassword({
@@ -39,9 +44,10 @@ Vue.component('media-list', {
         return [
           {
             id: 1,
-            avatarholder: 'p',
-            heading: 'heading',
-            content: 'content'
+            author: 'p',
+            title: 'title',
+            description: 'description',
+            datetime: '2016-07-20'
           }
         ];
       }
@@ -60,7 +66,6 @@ Vue.component('card', {
     },
     content: {
       type: String,
-      required: true,
       default: function () {
         return 'content';
       }
@@ -68,26 +73,26 @@ Vue.component('card', {
   }
 });
 
-Vue.component('main-view', {
-  template: '#main-view'
+Vue.component('posts-view', {
+  template: '#posts-view'
 });
 
-Vue.component('article-view', {
-  template: '#article-view'
+Vue.component('post-view', {
+  template: '#post-view'
 });
 
 var Root = new Vue({
   el: '#app',
   data: {
-    currentView: 'main-view',
+    currentView: 'posts-view',
     params: []
   }
 });
 
 var router = new Router();
 
-router.on('main', navigate('main-view'));
-router.on('article/:id', navigate('article-view'));
+router.on('posts', navigate('posts-view'));
+router.on('post/:id', navigate('post-view'));
 
 router.init();
 
@@ -96,7 +101,6 @@ function navigate (route) {
     var args = Array.prototype.slice.call(arguments);
     Root.currentView = route;
     Root.params = args;
-    console.log(Root.currentView);
   };
 }
 

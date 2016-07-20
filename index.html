@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="/assets/hack.css?v=0.5.0">
   <link rel="stylesheet" href="/assets/dark.css?v=0.5.0">
   <link rel="stylesheet" href="/assets/app.css?v=1.0.0">
-  <script src="/assets/vue.min.js?v=2.0.0-beta.2"></script>
+  <script src="/assets/vue.js?v=2.0.0-beta.2"></script>
 </head>
 <body class="hack dark">
   <div id="app" class="container">
@@ -15,7 +15,7 @@
       <h1>Peiran</h1>
       <h2>Micro blog</h2>
       <nav>
-        <a href="#/main">Main</a>
+        <a href="#/posts">Posts</a>
       </nav>
     </header>
     <section>
@@ -30,14 +30,14 @@
     </section>
   </div>
   <!-- templates -->
-  <script id="main-view" type="x-template">
-    <div class="main-view">
+  <script id="posts-view" type="x-template">
+    <div class="posts-view">
       <media-list></media-list>
     </div>
   </script>
 
-  <script id="article-view" type="x-template">
-    <div className="article-view">
+  <script id="post-view" type="x-template">
+    <div className="post-view">
       <h3>title</h3>
       <p>content</p>
     </div>
@@ -51,9 +51,10 @@
         </div>
         <div class="media-body">
           <div class="media-heading">
-            <a href="#/article/1">{{ m.heading }}</a>
+            <a :href="'#/post/' + m.id">{{ m.title }}</a>
+            <time :datetime="m.datetime">{{ m.datetime | timeago }}</time>
           </div>
-          <div class="media-content">{{ m.content }}</div>
+          <div class="media-content">{{ m.description }}</div>
         </div>
       </div>
     </div>
@@ -67,6 +68,7 @@
       </div>
     </div>
   </script>
+  <script src="/assets/timeago.js?v=0.0.1"></script>
   <script src="/assets/director/build/director.min.js?v=1.2.7"></script>
   <script src="/assets/es6-promise/es6-promise.min.js?v=3.2.2"></script>
   <script src="/assets/fetch/fetch.js?v=1.0.0"></script>

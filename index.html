@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Peiran</title>
+  <link rel="stylesheet" href="/assets/hack.css?v=0.5.0">
+  <link rel="stylesheet" href="/assets/dark.css?v=0.5.0">
+  <link rel="stylesheet" href="/assets/app.css?v=1.0.0">
+  <script src="/assets/vue.min.js?v=2.0.0-beta.2"></script>
+</head>
+<body class="hack dark">
+  <div id="app" class="container">
+    <header class="header">
+      <h1>Peiran</h1>
+      <h2>Micro blog</h2>
+      <nav>
+        <a href="#/main">Main</a>
+      </nav>
+    </header>
+    <section>
+      <div class="grid">
+        <div class="cell -9of12 content">
+          <component :is="currentView" keep-alive></component>
+        </div>
+        <div class="cell -3of12 sidebar">
+          <card></card>
+        </div>
+      </div>
+    </section>
+  </div>
+  <!-- templates -->
+  <script id="main-view" type="x-template">
+    <div class="main-view">
+      <media-list></media-list>
+    </div>
+  </script>
+
+  <script id="article-view" type="x-template">
+    <div className="article-view">
+      <h3>title</h3>
+      <p>content</p>
+    </div>
+  </script>
+
+  <script id="media-list" type="x-template">
+    <div class="media-list">
+      <div class="media" v-for="m in medias" track-by="id">
+        <div class="media-left">
+          <div class="avatarholder">{{ m.avatarholder }}</div>
+        </div>
+        <div class="media-body">
+          <div class="media-heading">
+            <a href="#/article/1">{{ m.heading }}</a>
+          </div>
+          <div class="media-content">{{ m.content }}</div>
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <script id="card" type="x-template">
+    <div class="card">
+      <header class="card-header">{{ title }}</header>
+      <div class="card-content">
+        <div class="inner">{{ content }}</div>
+      </div>
+    </div>
+  </script>
+  <script src="/assets/director/build/director.min.js?v=1.2.7"></script>
+  <script src="/assets/es6-promise/es6-promise.min.js?v=3.2.2"></script>
+  <script src="/assets/fetch/fetch.js?v=1.0.0"></script>
+  <script src="https://cdn.wilddog.com/js/client/current/wilddog.js"></script>
+  <script src="/assets/app.js?v=1.0.0"></script>
+</body>
+</html>

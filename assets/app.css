@@ -22,15 +22,19 @@ h3 {
   max-width: 77rem;
 }
 
-.header {
+.main-header {
   padding-bottom: 2rem!important;
   border-bottom: 1px solid rgba(95, 95, 95, .78);
 }
 
-.content {
+.main-content {
   padding-right: 1.99999999rem;
 }
 
-.footer {
+.main-footer {
   border-top: 1px solid rgba(95, 95, 95, .78);
+}
+
+.manager.card .card-content {
+  text-align: center;
 }

@@ -1,3 +1,9 @@
+if ('addEventListener' in document) {
+  document.addEventListener('DOMContentLoaded', function () {
+    FastClick.attach(document.body);
+  }, false);
+}
+
 Vue.config.debug = true;
 Vue.config.devtools = true;
 
@@ -47,6 +53,7 @@ Vue.component('media-list', {
             author: '曹',
             title: '标题',
             description: '描述',
+            content: '内容',
             datetime: '2016-07-20'
           }
         ];
@@ -55,36 +62,47 @@ Vue.component('media-list', {
   }
 });
 
-Vue.component('card', {
-  template: '#card',
-  props: {
-    title: {
-      type: String,
-      default: function () {
-        return 'title';
-      }
-    },
-    content: {
-      type: String,
-      default: function () {
-        return 'content';
-      }
+Vue.component('manager', {
+  template: '#manager',
+  computed: {
+    auth: function () {
+      return this.$root.authData;
+    }
+  },
+  methods: {
+    login: function () {
+      console.log('login');
     }
   }
 });
+
+
 
 Vue.component('posts-view', {
   template: '#posts-view'
 });
 
 Vue.component('post-view', {
-  template: '#post-view'
+  template: '#post-view',
+  data: function () {
+    return {
+      id: 1,
+      author: '曹',
+      title: '标题',
+      blockquote: '引用',
+      cite: 'https://n2x.in',
+      description: '描述',
+      content: '内容',
+      datetime: '2016-07-20'
+    };
+  }
 });
 
 var Root = new Vue({
   el: '#app',
   data: {
     currentView: 'posts-view',
+    authData: true,
     params: []
   }
 });

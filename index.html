@@ -26,9 +26,12 @@
     <!-- main -->
     <section>
       <div class="grid">
+        <!-- main content -->
         <div class="cell -9of12 main-content m-b">
           <component :is="currentView" keep-alive></component>
         </div>
+
+        <!-- main sidebar -->
         <div class="cell -3of12 main-sidebar m-b">
           <manager></manager>
           <div class="card m-b">
@@ -60,23 +63,27 @@
       <p class="poem-like">公元二零一六年 ——<u class='pn'>培冉</u></p>
     </footer>
   </div>
+
   <!-- templates -->
-  <script id="posts-view" type="x-template">
+
+  <!-- posts view tpl -->
+  <script id="posts-view" type="html">
     <div class="posts-view">
       <media-list></media-list>
     </div>
   </script>
 
-  <script id="post-view" type="x-template">
+  <!-- post view tpl -->
+  <script id="post-view" type="html">
     <div class="post-view">
       <article>
         <h3>{{ title }}</h3>
         <header>
-          作者：<u class="pn">{{ author }}</u> 
-          发布时间：<time :datetime="datetime">{{ datetime | timeago }}</time>
+          作者：<u class="pn">{{ author }}</u> 发布时间：
+          <time :datetime="datetime">{{ datetime | timeago }}</time>
         </header>
         <blockquote :cite="cite">
-           {{ blockquote }}
+          {{ blockquote }}
         </blockquote>
         <div class="description">
           {{ description }}
@@ -88,7 +95,8 @@
     </div>
   </script>
 
-  <script id="media-list" type="x-template">
+  <!-- media list tpl -->
+  <script id="media-list" type="html">
     <div class="media-list">
       <div class="media" v-for="m in medias" track-by="id">
         <div class="media-left">
@@ -105,60 +113,90 @@
     </div>
   </script>
 
-  <script id="manager" type="x-template">
-    <div class="card manager m-b">
-      <header class="card-header">管理</header>
-      <div class="card-content">
-        <div class="inner">
-          <button class="btn btn-default" v-if="!auth" @click="login">登录</button>
-          <div class="actions" v-if="auth">
-            <div class="grid">
-              <div class="cell -4of12">
-                <div>
-                  <span class="number">18</span>
+  <!-- manager tpl -->
+  <script id="manager" type="html">
+    <div class="manager">
+      <div class="card m-b">
+        <header class="card-header">管理</header>
+        <div class="card-content">
+          <div class="inner">
+            <button class="btn btn-default btn-ghost" v-if="!auth" @click="login">登录</button>
+            <div class="actions" v-if="auth">
+              <div class="grid">
+                <div class="cell -4of12">
+                  <div>
+                    <span class="number">18</span>
+                  </div>
+                  <div class="divider"></div>
+                  <div>
+                    <span>节点</span>
+                  </div>
                 </div>
-                <div class="divider"></div>
-                <div>
-                  <span>节点</span>
+                <div class="cell -4of12">
+                  <div>
+                    <span class="number">28</span>
+                  </div>
+                  <div class="divider"></div>
+                  <div>
+                    <span>帖子</span>
+                  </div>
+                </div>
+                <div class="cell -4of12">
+                  <div>
+                    <span class="number">38</span>
+                  </div>
+                  <div class="divider"></div>
+                  <div>
+                    <span>评论</span>
+                  </div>
                 </div>
               </div>
-              <div class="cell -4of12">
-                <div>
-                  <span class="number">28</span>
-                </div>
-                <div class="divider"></div>
-                <div>
-                  <span>帖子</span>
-                </div>
+              <div>
+                <a href="#/compose">发布</a>
+                <a href="#/logout">退出</a>
               </div>
-              <div class="cell -4of12">
-                <div>
-                  <span class="number">38</span>
-                </div>
-                <div class="divider"></div>
-                <div>
-                  <span>评论</span>
-                </div>
-              </div>
-            </div>
-            <div>
-              <a href="#/compose">发布</a>
-              <a href="#/logout">退出</a>
             </div>
           </div>
         </div>
       </div>
+
+      <login-form v-show="showLoginForm"></login-form>
     </div>
   </script>
+
+  <!-- login form tpl -->
+  <script id="login-form" type="html">
+    <div class="login-form">
+      <form class="form">
+        <div class="caption">
+          一刹那
+        </div>
+        <p class="sub-caption">一期一会，世当珍惜</p>
+        <fieldset class="form-group" :class="{ 'form-error': !emailValid, 'form-success': emailValid }">
+          <label for="email">邮箱：</label>
+          <input id="email" type="email" placeholder="" class="form-control" v-model="email" @keyup="validateEmail(email)">
+        </fieldset>
+        <fieldset class="form-group" :class="{ 'form-error': !passwordValid, 'form-success': passwordValid }">
+          <label for="password">密码：</label>
+          <input id="password" type="password" placeholder="" class="form-control" v-model="password" @keyup="validatePassword(password)">
+        </fieldset>
+        <div class="form-actions">
+          <button type="button" class="btn btn-default btn-ghost btn-block">登录</button>
+          <button type="button" class="close" @click="close">关闭</button>
+        </div>
+      </form>
+    </div>
+  </script>
+
   <script src="assets/nzh/nzh.js?v=0.0.2"></script>
   <script src="assets/timeago.js?v=0.0.1"></script>
   <script src="assets/director/director.min.js?v=1.2.7"></script>
   <script src="assets/es6-promise/es6-promise.min.js?v=3.2.2"></script>
   <script src="assets/fetch/fetch.js?v=1.0.0"></script>
   <script src="https://cdn.wilddog.com/js/client/current/wilddog.js"></script>
+  <script src="assets/EventEmitter.min.js"></script>
   <script src="assets/fastclick.js?v=1.0.6"></script>
   <script src="assets/app.js?v=1.0.0"></script>
-  <script src="assets/Han/han.min.js?v=3.3.0"></script>
 </body>
 
 </html>

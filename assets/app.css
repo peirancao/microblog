@@ -1,18 +1,36 @@
+.dark {
+  background-color: rgba(0, 0, 0, .87);
+}
+
+h1 {
+  font-size: 2em!important;
+}
+
+h2 {
+  font-size: 1.5em!important;
+}
+
+h3 {
+  font-size: 1.17em!important;
+}
+
+.m-b {
+  margin-bottom: 2rem!important;
+}
+
 .container {
   max-width: 77rem;
 }
 
 .header {
   padding-bottom: 2rem!important;
-  margin-bottom: 2rem!important;
-  border-bottom: 1px solid rgba(95,95,95,.78);
+  border-bottom: 1px solid rgba(95, 95, 95, .78);
 }
 
 .content {
-  margin-bottom: 1rem;
   padding-right: 1.99999999rem;
 }
 
-.sidebar {
-  margin-bottom: 1rem;
+.footer {
+  border-top: 1px solid rgba(95, 95, 95, .78);
 }

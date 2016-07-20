@@ -4,51 +4,60 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-  <title>一期一会</title>
-  <link rel="stylesheet" href="/assets/hack.css?v=0.5.0">
-  <link rel="stylesheet" href="/assets/dark.css?v=0.5.0">
-  <link rel="stylesheet" href="/assets/Han/han.min.css?v=3.3.0">
-  <link rel="stylesheet" href="/assets/app.css?v=1.0.0">
-  <script src="/assets/vue.js?v=2.0.0-beta.2"></script>
+  <title>一刹那</title>
+  <link rel="stylesheet" href="assets/hack.css?v=0.5.0">
+  <link rel="stylesheet" href="assets/dark.css?v=0.5.0">
+  <link rel="stylesheet" href="assets/Han/han.min.css?v=3.3.0">
+  <link rel="stylesheet" href="assets/app.css?v=1.0.0">
+  <script src="assets/vue.js?v=2.0.0-beta.2"></script>
 </head>
 
 <body class="hack dark">
   <div id="app" class="container">
-    <header class="header">
-      <h1>一期一会</h1>
-      <h2>难得一面，世当珍惜</h2>
+    <!-- header  -->
+    <header class="header m-b">
+      <h1>一刹那</h1>
+      <h2>一期一会，难得一面，世当珍惜</h2>
       <nav>
         <a href="#/posts">帖子</a>
       </nav>
     </header>
+
+    <!-- main -->
     <section>
       <div class="grid">
-        <div class="cell -9of12 content">
+        <div class="cell -9of12 content m-b">
           <component :is="currentView" keep-alive></component>
         </div>
-        <div class="cell -3of12 sidebar">
+        <div class="cell -3of12 sidebar m-b">
           <div class="card">
             <header class="card-header">时间</header>
             <div class="card-content">
               <div class="inner">
-                <p>一刹那为一念；</p>
-                <p>二十念为一瞬；</p>
-                <p>二十瞬为一弹指；</p>
-                <p>二十弹指为一罗预；</p>
-                <p>二十罗预为一须臾；</p>
-                <p>一日一夜有三十须臾；</p>
-                <p>那么——————</p>
-                <p>一昼夜有八万六千四百秒；</p>
-                <p>一须臾等于二千八百八十秒；</p>
-                <p>一弹指等于七点二秒；</p>
-                <p>一瞬间等于零点三六秒；</p>
-                <p>一刹那却只有零点零一八秒。</p>
+                <p class="poem-like">
+                  一刹那为一念；<br> 二十念为一瞬；
+                  <br> 二十瞬为一弹指；
+                  <br> 二十弹指为一罗预；
+                  <br> 二十罗预为一须臾；
+                  <br> 一日一夜有三十须臾；
+                  <br> 那么————
+                  <br> 一昼夜有八万六千四百秒；
+                  <br> 一须臾等于二千八百八十秒；
+                  <br> 一弹指等于七点二秒；
+                  <br> 一瞬间等于零点三六秒；
+                  <br> 一刹那却只有零点零一八秒。
+                  <br>
               </div>
             </div>
           </div>
         </div>
       </div>
     </section>
+
+    <!-- footer -->
+    <footer class="footer">
+      <p class="poem-like">公元二零一六年 ——<u class='pn'>培冉</u></p>
+    </footer>
   </div>
   <!-- templates -->
   <script id="posts-view" type="x-template">
@@ -58,10 +67,10 @@
   </script>
 
   <script id="post-view" type="x-template">
-    <div className="post-view">
-      <h3>title</h3>
-      <p>content</p>
-    </div>
+    <article class="post-view">
+      <h3>标题</h3>
+      <p class="poem-like">内容</p>
+    </article>
   </script>
 
   <script id="media-list" type="x-template">
@@ -89,13 +98,14 @@
       </div>
     </div>
   </script>
-  <script src="/assets/nzh/nzh.js?v=0.0.2"></script>
-  <script src="/assets/timeago.js?v=0.0.1"></script>
-  <script src="/assets/director/director.min.js?v=1.2.7"></script>
-  <script src="/assets/es6-promise/es6-promise.min.js?v=3.2.2"></script>
-  <script src="/assets/fetch/fetch.js?v=1.0.0"></script>
+  <script src="assets/nzh/nzh.js?v=0.0.2"></script>
+  <script src="assets/timeago.js?v=0.0.1"></script>
+  <script src="assets/director/director.min.js?v=1.2.7"></script>
+  <script src="assets/es6-promise/es6-promise.min.js?v=3.2.2"></script>
+  <script src="assets/fetch/fetch.js?v=1.0.0"></script>
   <script src="https://cdn.wilddog.com/js/client/current/wilddog.js"></script>
-  <script src="/assets/app.js?v=1.0.0"></script>
+  <script src="assets/app.js?v=1.0.0"></script>
+  <script src="assets/Han/han.min.js?v=3.3.0"></script>
 </body>
 
 </html>

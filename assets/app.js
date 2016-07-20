@@ -44,9 +44,9 @@ Vue.component('media-list', {
         return [
           {
             id: 1,
-            author: '冉',
-            title: 'title',
-            description: 'description',
+            author: '曹',
+            title: '标题',
+            description: '描述',
             datetime: '2016-07-20'
           }
         ];

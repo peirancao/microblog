@@ -1,0 +1,33 @@
+{
+  "name": "nzh",
+  "version": "0.0.2",
+  "description": "数字转中文,大写,金额",
+  "main": "nzh.js",
+  "homepage": "https://github.com/cnwhy/numtoCL",
+  "authors": [
+    "cnwhy"
+  ],
+  "keywords": [
+    "数字转中文",
+    "数字转金额",
+    "中文数字转阿拉伯数字",
+    "中文数字"
+  ],
+  "license": "BSD",
+  "ignore": [
+    "**/.*",
+    "index.html",
+    "test",
+    "demo"
+  ],
+  "_release": "0.0.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.0.2",
+    "commit": "f82fe065c4c11908d4e4ef891f563cb3c42ed72f"
+  },
+  "_source": "https://github.com/cnwhy/nzh.git",
+  "_target": "^0.0.2",
+  "_originalSource": "nzh",
+  "_direct": true
+}

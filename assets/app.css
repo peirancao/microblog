@@ -3,7 +3,9 @@
 }
 
 .header {
-  margin-bottom: 1rem!important;
+  padding-bottom: 2rem!important;
+  margin-bottom: 2rem!important;
+  border-bottom: 1px solid rgba(95,95,95,.78);
 }
 
 .content {

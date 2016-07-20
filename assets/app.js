@@ -3,17 +3,17 @@ Vue.config.devtools = true;
 
 var timeago = timeago();
 Vue.filter('timeago', function (value) {
-  return timeago.format(value);
+  return timeago.format(value, 'zh_CN');
 });
 
 var ref = new Wilddog("https://microblog.wilddogio.com/");
 
 ref.authWithPassword({
-    email    : '21766691@qq.com',
-    password : 'mb366524680'
+  email: '21766691@qq.com',
+  password: 'mb366524680'
 }, authHandler);
 
-function authHandler (error, authData) {
+function authHandler(error, authData) {
   if (error) {
     console.log("Login Failed!", error);
   } else {
@@ -32,7 +32,7 @@ function authHandler (error, authData) {
 ref.child('posts').on('value', function (snapshot) {
   console.log(snapshot.val());
 }, function (errorObject) {
-    console.log("The read failed: " + errorObject.code);
+  console.log("The read failed: " + errorObject.code);
 });
 
 Vue.component('media-list', {
@@ -44,7 +44,7 @@ Vue.component('media-list', {
         return [
           {
             id: 1,
-            author: 'p',
+            author: '冉',
             title: 'title',
             description: 'description',
             datetime: '2016-07-20'
@@ -96,7 +96,7 @@ router.on('post/:id', navigate('post-view'));
 
 router.init();
 
-function navigate (route) {
+function navigate(route) {
   return function () {
     var args = Array.prototype.slice.call(arguments);
     Root.currentView = route;

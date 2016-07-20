@@ -20,6 +20,7 @@
   ],
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
-    "es6-promise": "^3.2.2"
+    "es6-promise": "^3.2.2",
+    "Han": "^3.3.0"
   }
 }

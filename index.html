@@ -1,21 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant" class="han-init">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-  <title>Peiran</title>
+  <title>一期一会</title>
   <link rel="stylesheet" href="/assets/hack.css?v=0.5.0">
   <link rel="stylesheet" href="/assets/dark.css?v=0.5.0">
+  <link rel="stylesheet" href="/assets/Han/han.min.css?v=3.3.0">
   <link rel="stylesheet" href="/assets/app.css?v=1.0.0">
   <script src="/assets/vue.js?v=2.0.0-beta.2"></script>
 </head>
+
 <body class="hack dark">
   <div id="app" class="container">
     <header class="header">
-      <h1>Peiran</h1>
-      <h2>Micro blog</h2>
+      <h1>一期一会</h1>
+      <h2>难得一面，世当珍惜</h2>
       <nav>
-        <a href="#/posts">Posts</a>
+        <a href="#/posts">帖子</a>
       </nav>
     </header>
     <section>
@@ -24,7 +27,25 @@
           <component :is="currentView" keep-alive></component>
         </div>
         <div class="cell -3of12 sidebar">
-          <card></card>
+          <div class="card">
+            <header class="card-header">时间</header>
+            <div class="card-content">
+              <div class="inner">
+                <p>一刹那为一念；</p>
+                <p>二十念为一瞬；</p>
+                <p>二十瞬为一弹指；</p>
+                <p>二十弹指为一罗预；</p>
+                <p>二十罗预为一须臾；</p>
+                <p>一日一夜有三十须臾；</p>
+                <p>那么——————</p>
+                <p>一昼夜有八万六千四百秒；</p>
+                <p>一须臾等于二千八百八十秒；</p>
+                <p>一弹指等于七点二秒；</p>
+                <p>一瞬间等于零点三六秒；</p>
+                <p>一刹那却只有零点零一八秒。</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -47,7 +68,7 @@
     <div class="media-list">
       <div class="media" v-for="m in medias" track-by="id">
         <div class="media-left">
-          <div class="avatarholder">{{ m.avatarholder }}</div>
+          <div class="avatarholder">{{ m.author }}</div>
         </div>
         <div class="media-body">
           <div class="media-heading">
@@ -68,11 +89,13 @@
       </div>
     </div>
   </script>
+  <script src="/assets/nzh/nzh.js?v=0.0.2"></script>
   <script src="/assets/timeago.js?v=0.0.1"></script>
-  <script src="/assets/director/build/director.min.js?v=1.2.7"></script>
+  <script src="/assets/director/director.min.js?v=1.2.7"></script>
   <script src="/assets/es6-promise/es6-promise.min.js?v=3.2.2"></script>
   <script src="/assets/fetch/fetch.js?v=1.0.0"></script>
   <script src="https://cdn.wilddog.com/js/client/current/wilddog.js"></script>
   <script src="/assets/app.js?v=1.0.0"></script>
 </body>
+
 </html>

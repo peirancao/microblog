@@ -5,7 +5,7 @@
   else
     root.timeago = factory(root);
 }(typeof window !== 'undefined' ? window : this, function () {
-
+var nzhcn = Nzh.cn;
 var timeago = function(nowDate) {
   var timers = {}, // 当前定时器
   cnt = 0,
@@ -104,7 +104,7 @@ var timeago = function(nowDate) {
   },
   // 简单的字符串模版，目前只是将%s替换
   simpleTemplate = function(str, tmp) {
-    return str.replace('%s', tmp);
+    return str.replace('%s', nzhcn.encodeS(tmp));
   },
   isArray = function (o) {
     return o.length !== undefined;

@@ -53,9 +53,9 @@ h3 {
 }
 
 .login-form form {
-  width: 381px;
+  /*width: 31.75rem;*/
   background-color: #212121;
-  padding: .5rem;
+  padding: 0 5rem;
   /*box-shadow: 0 -20px 40px rgba(32,46,71,.05),0 40px 40px rgba(32,46,71,.05);*/
   box-shadow: 3px 3px 36px 9px #111;
 }
@@ -97,4 +97,26 @@ h3 {
   margin: 0;
   font-size: 1.5rem;
   margin-top: 10px;
+  margin-bottom: 3.8rem;
+}
+
+.login-form .form-actions {
+  margin-top: 3.8rem;
+  margin-bottom: 4.5rem;
+}
+
+.login-form .form-group.form-error input {
+  border-color: #f44336!important;
+}
+
+.login-form .form-group.form-success input {
+  border-color: #4caf50!important;
+}
+
+.login-form .form-group.form-warning input {
+  border-color: rgba(95,95,95,.78)!important
+}
+
+.login-form .form-group.form-warning input:focus {
+  border-color: #ccc!important;
 }

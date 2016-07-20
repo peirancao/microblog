@@ -60,7 +60,7 @@
 
     <!-- footer -->
     <footer class="main-footer">
-      <p class="poem-like">公元二零一六年 ——<u class='pn'>培冉</u></p>
+      <p class="poem-like">公元二零一六年 ——<u class='pn'>我</u></p>
     </footer>
   </div>
 
@@ -172,13 +172,11 @@
           一刹那
         </div>
         <p class="sub-caption">一期一会，世当珍惜</p>
-        <fieldset class="form-group" :class="{ 'form-error': !emailValid, 'form-success': emailValid }">
-          <label for="email">邮箱：</label>
-          <input id="email" type="email" placeholder="" class="form-control" v-model="email" @keyup="validateEmail(email)">
+        <fieldset class="form-group" :class="{ 'form-error': !emailValid, 'form-success': emailValid, 'form-warning': emailDefaultValid }">
+          <input id="email" type="email" placeholder="邮箱" class="form-control" v-model="email" @keyup="validateEmail(email)">
         </fieldset>
-        <fieldset class="form-group" :class="{ 'form-error': !passwordValid, 'form-success': passwordValid }">
-          <label for="password">密码：</label>
-          <input id="password" type="password" placeholder="" class="form-control" v-model="password" @keyup="validatePassword(password)">
+        <fieldset class="form-group" :class="{ 'form-error': !passwordValid, 'form-success': passwordValid, 'form-warning': passwordDefaultValid }">
+          <input id="password" type="password" placeholder="密码" class="form-control" v-model="password" @keyup="validatePassword(password)">
         </fieldset>
         <div class="form-actions">
           <button type="button" class="btn btn-default btn-ghost btn-block">登录</button>

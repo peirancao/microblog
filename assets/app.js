@@ -59,7 +59,7 @@ Vue.component('media-list', {
         return [
           {
             id: 1,
-            author: '曹',
+            author: '我',
             title: '标题',
             description: '描述',
             content: '内容',
@@ -76,10 +76,11 @@ Vue.component('login-form', {
   template: '#login-form',
   data: function () {
     return {
-      defaultValid: true,
       email: '',
+      emailDefaultValid: true,
       emailValid: false,
       password: '',
+      passwordDefaultValid: true,
       passwordValid: false
     };
   },
@@ -90,10 +91,22 @@ Vue.component('login-form', {
     validateEmail: function (value) {
       var pattern = /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/;
       this.emailValid = pattern.test(value);
+      if (!pattern.test(value)) {
+        this.emailDefaultValid = false;
+      }
+      if (value == '') {
+        this.emailDefaultValid = true;
+      }
     },
     validatePassword: function (value) {
       var pattern =  /[a-zA-Z0-9_]{6,12}/;
       this.passwordValid = pattern.test(value);
+      if (!pattern.test(value)) {
+        this.passwordDefaultValid = false;
+      }
+      if (value == '') {
+        this.passwordDefaultValid = true;
+      }
     }
   }
 });

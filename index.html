@@ -62,9 +62,19 @@
     <footer class="main-footer">
       <p class="poem-like">公元二零一六年 ——<u class='pn'>我</u></p>
     </footer>
+    <alert v-show="showAlert" :type="alertType" :msg="alertMsg"></alert>
   </div>
 
   <!-- templates -->
+
+  <!-- alert tpl -->
+  <script id="alert" type="html">
+    <div class="alert" 
+      :class="{ 'alert-success': type === 'success', 'alert-info': type === 'info', 
+      'alert-warning': type === 'warning', 'alert-error': type === 'error' }">
+      {{ msg }}
+    </div>
+  </script>
 
   <!-- posts view tpl -->
   <script id="posts-view" type="html">
@@ -153,7 +163,7 @@
               </div>
               <div>
                 <a href="#/compose">发布</a>
-                <a href="#/logout">退出</a>
+                <a href="javascript:;" @click="logout">退出</a>
               </div>
             </div>
           </div>
@@ -167,22 +177,27 @@
   <!-- login form tpl -->
   <script id="login-form" type="html">
     <div class="login-form">
-      <form class="form">
-        <div class="caption">
-          一刹那
-        </div>
-        <p class="sub-caption">一期一会，世当珍惜</p>
-        <fieldset class="form-group" :class="{ 'form-error': !emailValid, 'form-success': emailValid, 'form-warning': emailDefaultValid }">
-          <input id="email" type="email" placeholder="邮箱" class="form-control" v-model="email" @keyup="validateEmail(email)">
-        </fieldset>
-        <fieldset class="form-group" :class="{ 'form-error': !passwordValid, 'form-success': passwordValid, 'form-warning': passwordDefaultValid }">
-          <input id="password" type="password" placeholder="密码" class="form-control" v-model="password" @keyup="validatePassword(password)">
-        </fieldset>
-        <div class="form-actions">
-          <button type="button" class="btn btn-default btn-ghost btn-block">登录</button>
-          <button type="button" class="close" @click="close">关闭</button>
+      <form class="form" @submit.prevent="submit">
+        <div class="wrapper">
+          <div class="caption">
+            一刹那
+          </div>
+          <p class="sub-caption">一期一会，世当珍惜</p>
+          <fieldset class="form-group" :class="{ 'form-error': !emailValid, 'form-success': emailValid, 'form-warning': emailDefaultValid }">
+            <input autocomplete="off" id="email" type="email" placeholder="邮箱" class="form-control" v-model="email" @keyup="validateEmail(email)">
+          </fieldset>
+          <fieldset class="form-group" :class="{ 'form-error': !passwordValid, 'form-success': passwordValid, 'form-warning': passwordDefaultValid }">
+            <input id="password" type="password" placeholder="密码" class="form-control" v-model="password" @keyup="validatePassword(password)">
+          </fieldset>
+          <div class="form-actions">
+            <button :disabled="!emailValid || !passwordValid" type="submit" class="btn btn-default btn-ghost btn-block" :class="{ 'disabled': !emailValid || !passwordValid }">
+              <div class="loading" v-show="loading"></div>
+              登录
+            </button>
+          </div>
         </div>
       </form>
+      <button type="button" class="close" @click="close">关闭</button>
     </div>
   </script>
 
@@ -194,6 +209,7 @@
   <script src="https://cdn.wilddog.com/js/client/current/wilddog.js"></script>
   <script src="assets/EventEmitter.min.js"></script>
   <script src="assets/fastclick.js?v=1.0.6"></script>
+  <script src="assets/js.cookie.js?v=2.1.2"></script>
   <script src="assets/app.js?v=1.0.0"></script>
 </body>
 

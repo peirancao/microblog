@@ -55,9 +55,12 @@ h3 {
 .login-form form {
   /*width: 31.75rem;*/
   background-color: #212121;
-  padding: 0 5rem;
   /*box-shadow: 0 -20px 40px rgba(32,46,71,.05),0 40px 40px rgba(32,46,71,.05);*/
   box-shadow: 3px 3px 36px 9px #111;
+}
+
+.login-form .wrapper {
+  padding: 0 5rem;
 }
 
 .login-form fieldset {
@@ -119,4 +122,18 @@ h3 {
 
 .login-form .form-group.form-warning input:focus {
   border-color: #ccc!important;
+}
+
+.login-form .form-actions button.disabled, .login-form .form-actions button.disabled:hover {
+  border-color: #333!important;
+  color: #333!important;
+}
+
+.alert {
+  position: absolute;
+  width: 50%;
+  z-index: 99;
+  left: 25%;
+  top: 1rem;
+  text-align: center;
 }

@@ -22,19 +22,6 @@ Vue.filter('timeago', function (value) {
 
 var ref = new Wilddog('https://microblog.wilddogio.com/');
 
-ref.authWithPassword({
-  email: '21766691@qq.com',
-  password: 'mb366524680'
-}, authHandler);
-
-function authHandler (error, authData) {
-  if (error) {
-    console.log('Login Failed!', error);
-  } else {
-    console.log('Authenticated successfully with payload:', authData);
-  }
-}
-
 // ref.child('posts').push({
 //   author: 'peiran',
 //   title: 'title',
@@ -47,6 +34,25 @@ ref.child('posts').on('value', function (snapshot) {
   console.log(snapshot.val());
 }, function (errorObject) {
   console.log('The read failed: ' + errorObject.code);
+});
+
+// alert component
+Vue.component('alert', {
+  template: '#alert',
+  props: {
+    type: {
+      type: String,
+      default: function () {
+        return 'info';
+      }
+    },
+    msg: {
+      type: String,
+      default: function () {
+        return 'message';
+      }
+    }
+  }
 });
 
 // media list component
@@ -81,12 +87,46 @@ Vue.component('login-form', {
       emailValid: false,
       password: '',
       passwordDefaultValid: true,
-      passwordValid: false
+      passwordValid: false,
+      loading: false
     };
+  },
+  computed: {
+    alertType: function () {
+      return this.$root.alertType;
+    },
+    alertMsg: function () {
+      return this.$root.alertMsg;
+    }
   },
   methods: {
     close: function () {
       ee.trigger('closeLoginForm');
+    },
+    clearLoginForm: function () {
+      this.email = this.password = '';
+      this.emailDefaultValid = this.passwordDefaultValid = true;
+      this.emailValid = this.passwordValid = false;
+    },
+    submit: function () {
+      var self = this;
+      self.loading = true;
+      ref.authWithPassword({
+        email: self.email,
+        password: self.password
+      }, function (error, authData) {
+        self.loading = false;
+        if (error) {
+          console.error('*登录组件* 错误代码：' + error.code);
+          self.$root.alert('登录失败', 'error', 3000);
+        } else {
+          self.$root.authData = authData;
+          Cookies.set('__AUTH__DATA__', JSON.stringify(authData), { expires: 1 });
+          self.$root.alert('登录成功', 'success', 3000);
+          self.clearLoginForm()
+          self.$root.showLoginForm = false;
+        }
+      });
     },
     validateEmail: function (value) {
       var pattern = /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/;
@@ -94,7 +134,7 @@ Vue.component('login-form', {
       if (!pattern.test(value)) {
         this.emailDefaultValid = false;
       }
-      if (value == '') {
+      if (value === '') {
         this.emailDefaultValid = true;
       }
     },
@@ -104,7 +144,7 @@ Vue.component('login-form', {
       if (!pattern.test(value)) {
         this.passwordDefaultValid = false;
       }
-      if (value == '') {
+      if (value === '') {
         this.passwordDefaultValid = true;
       }
     }
@@ -117,22 +157,24 @@ Vue.component('manager', {
   created: function () {
     var self = this;
     ee.on('closeLoginForm', function () {
-      self.showLoginForm = false;
+      self.$root.showLoginForm = false;
     });
-  },
-  data: function () {
-    return {
-      showLoginForm: false
-    };
   },
   computed: {
     auth: function () {
       return this.$root.authData;
+    },
+    showLoginForm: function () {
+      return this.$root.showLoginForm;
     }
   },
   methods: {
     login: function () {
-      this.showLoginForm = true;
+      this.$root.showLoginForm = true;
+    },
+    logout: function () {
+      this.$root.authData = null;
+      Cookies.remove('__AUTH__DATA__');
     }
   }
 });
@@ -163,9 +205,24 @@ Vue.component('post-view', {
 var Root = new Vue({
   el: '#app',
   data: {
+    authData: Cookies.get('__AUTH__DATA__') ? JSON.parse(Cookies.get('__AUTH__DATA__')) : null,
     currentView: 'posts-view',
-    authData: null,
-    params: []
+    params: [],
+    showLoginForm: false,
+    showAlert: false,
+    alertType: 'info',
+    alertMsg: 'message'
+  },
+  methods: {
+    alert: function (msg, type, d) {
+      var self = this;
+      self.showAlert = true;
+      self.alertMsg = msg;
+      self.alertType = type;
+      setTimeout(function () {
+        self.showAlert = false;
+      }, d);
+    },
   }
 });
 

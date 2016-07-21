@@ -9,8 +9,8 @@ if ('addEventListener' in document) {
 var ee = new EventEmitter();
 
 // vue config
-Vue.config.debug = true;
-Vue.config.devtools = true;
+// Vue.config.debug = true;
+// Vue.config.devtools = true;
 
 // vue filters
 var timeago = timeago();

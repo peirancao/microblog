@@ -131,9 +131,9 @@ h3 {
 
 .alert {
   position: absolute;
-  width: 50%;
+  width: 20%;
   z-index: 99;
-  left: 25%;
+  left: 40%;
   top: 1rem;
   text-align: center;
 }

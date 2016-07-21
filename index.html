@@ -130,8 +130,7 @@
         <header class="card-header">管理</header>
         <div class="card-content">
           <div class="inner">
-            <button class="btn btn-default btn-ghost" v-if="!auth" @click="login">登录</button>
-            <div class="actions" v-if="auth">
+            <div class="actions">
               <div class="grid">
                 <div class="cell -4of12">
                   <div>
@@ -161,7 +160,10 @@
                   </div>
                 </div>
               </div>
-              <div>
+              <div v-if="!auth">
+                <a href="javascript:;" @click="login">登录</a>
+              </div>
+              <div v-if="auth">
                 <a href="#/compose">发布</a>
                 <a href="javascript:;" @click="logout">退出</a>
               </div>

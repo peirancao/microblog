@@ -9,8 +9,8 @@ if ('addEventListener' in document) {
 var ee = new EventEmitter();
 
 // vue config
-// Vue.config.debug = true;
-// Vue.config.devtools = true;
+Vue.config.debug = true;
+Vue.config.devtools = true;
 
 // vue filters
 var timeago = timeago();
@@ -162,7 +162,11 @@ Vue.component('manager', {
   },
   computed: {
     auth: function () {
-      return this.$root.authData;
+      if (this.$root.authData) {
+        return true;
+      } else {
+        return false;
+      }
     },
     showLoginForm: function () {
       return this.$root.showLoginForm;
@@ -190,7 +194,7 @@ Vue.component('post-view', {
   data: function () {
     return {
       id: 1,
-      author: '曹',
+      author: '我',
       title: '标题',
       blockquote: '引用',
       cite: 'https://n2x.in',

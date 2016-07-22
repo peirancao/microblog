@@ -80,11 +80,21 @@
     state = state || initialState.auth;
     switch (action.type) {
       case Types.GET_AUTH_DATA:
-        return state.authData;
+        return state.data;
       case Types.SET_AUTH_DATA:
-        return {
-          authData: action.authData
-        };
+        state.data = action.data;
+        return state.data;
+    }
+  }
+
+  function route (state, action) {
+    state = state || initialState.route;
+    switch (action.type) {
+      case Types.GET_ROUTE:
+        return state.route;
+      case Types.SET_ROUTE:
+        state.data = action.data;
+        return state.data;
     }
   }
 

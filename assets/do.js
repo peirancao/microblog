@@ -119,7 +119,7 @@ load = function(url, type, charset, cb) {
 
     t =  type || url.toLowerCase().split(/\./).pop().replace(/[\?#].*/, '');
 
-    if (t === 'js') {
+    if (t || t === 'js') {
       n = doc.createElement('script');
       n.setAttribute('type', 'text/javascript');
       n.setAttribute('src', url);
@@ -141,7 +141,7 @@ load = function(url, type, charset, cb) {
         done();
         img.onerror = null;
         img = null;
-      }
+      };
       img.src = url;
     } else {
       // firefox, safari, chrome, ie9下加载失败触发

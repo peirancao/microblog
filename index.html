@@ -50,7 +50,7 @@
                   <br> 一弹指等于七点二秒；
                   <br> 一瞬间等于零点三六秒；
                   <br> 一刹那却只有零点零一八秒。
-                  <br>
+                </p>
               </div>
             </div>
           </div>
@@ -69,8 +69,7 @@
 
   <!-- alert tpl -->
   <script id="alert" type="html">
-    <div class="alert" 
-      :class="{ 'alert-success': type === 'success', 'alert-info': type === 'info', 
+    <div class="alert" :class="{ 'alert-success': type === 'success', 'alert-info': type === 'info', 
       'alert-warning': type === 'warning', 'alert-error': type === 'error' }">
       {{ msg }}
     </div>
@@ -160,10 +159,10 @@
                   </div>
                 </div>
               </div>
-              <div v-if="!auth">
+              <div v-show="!auth">
                 <a href="javascript:;" @click="login">登录</a>
               </div>
-              <div v-if="auth">
+              <div v-show="auth">
                 <a href="#/compose">发布</a>
                 <a href="javascript:;" @click="logout">退出</a>
               </div>
@@ -202,6 +201,49 @@
       <button type="button" class="close" @click="close">关闭</button>
     </div>
   </script>
+
+  <script id="compose" type="html">
+    <div class="compose">
+      <form class="form">
+        <fieldset class="form-group" v-show="showSelectNode">
+          <label for="node">节点：</label>
+          <select id="node" class="form-control" v-model="node" @change="selectNode($event)">
+            <option>China</option>
+            <option>U.S.</option>
+            <option>U.K.</option>
+            <option>创建新节点</option>
+          </select>
+        </fieldset>
+        <fieldset class="form-group new-node" v-show="showNewNode">
+          <label for="new-node">新节点：</label>
+          <input id="new-node" type="text" placeholder="" class="form-control" v-model="newNode">
+          <a href="javascript:;" class="back" @click="goSelectNode">返回</a>
+        </fieldset>
+        <fieldset class="form-group">
+          <label for="post-title">标题：</label>
+          <input id="post-title" type="text" placeholder="" class="form-control" v-model="postTitle">
+        </fieldset>
+        <fieldset class="form-group form-textarea">
+          <label for="post-description">描述：</label>
+          <textarea id="post-description" rows="5" class="form-control" v-model="postDescription"></textarea>
+        </fieldset>
+        <fieldset class="form-group form-textarea">
+          <label for="post-content">内容：</label>
+          <textarea id="post-content" rows="5" class="form-control" v-model="postContent"></textarea>
+        </fieldset>
+        <fieldset class="form-group form-textarea">
+          <label for="post-quote">引用：</label>
+          <textarea id="post-quote" rows="5" class="form-control" v-model="postQuote"></textarea>
+          <label for="post-cite">来源：</label>
+          <input id="post-cite" type="url" placeholder="" class="form-control" v-model="postCite">
+        </fieldset>
+        <div class="form-actions">
+          <button type="button" class="btn btn-default btn-block btn-ghost">发布</button>
+        </div>
+      </form>
+    </div>
+  </script>
+
   <script src="assets/Han/han.min.js?v=3.3.0"></script>
   <script src="assets/main.js?v=0.0.1"></script>
 </body>

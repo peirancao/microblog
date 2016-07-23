@@ -179,6 +179,7 @@ Vue.component('manager', {
     logout: function () {
       this.$root.authData = null;
       Cookies.remove('__AUTH__DATA__');
+      window.location.href = '/';
     }
   }
 });
@@ -202,6 +203,38 @@ Vue.component('post-view', {
       content: '内容',
       datetime: '2016-07-20'
     };
+  }
+});
+
+// compose view component
+Vue.component('compose', {
+  template: '#compose',
+  data: function () {
+    return {
+      showSelectNode: true,
+      showNewNode: false,
+      node: 'U.S.',
+      newNode: '',
+      postTitle: '',
+      postDescription: '',
+      postContent: '',
+      postQuote: '',
+      postCite: ''
+    };
+  },
+  methods: {
+    selectNode: function (e) {
+      var node = e.target.value;
+      if (node === '创建新节点') {
+        this.showSelectNode = false;
+        this.showNewNode = true;
+      }
+    },
+    goSelectNode: function () {
+      this.node = 'U.S.';
+      this.showSelectNode = true;
+      this.showNewNode = false;
+    }
   }
 });
 
@@ -235,15 +268,28 @@ var router = new Router();
 
 router.on('posts', navigate('posts-view'));
 router.on('post/:id', navigate('post-view'));
+router.on('compose', navigate('compose', true));
 
 router.init();
 
-function navigate (route) {
-  return function () {
-    var args = Array.prototype.slice.call(arguments);
-    Root.currentView = route;
-    Root.params = args;
-  };
+function requireAuth (route) {
+  var _list = ['compose'];
+  console.log(route);
+  return _list.indexOf(route) > -1;
+}
+
+function navigate (route, auth) {
+  return function (_route) {
+    return function () {
+      if (auth && requireAuth(_route) && !Root.authData) {
+        window.location.href = '/';
+        return false;
+      }
+      var args = Array.prototype.slice.call(arguments);
+      Root.currentView = _route;
+      Root.params = args;
+    };
+  }(route);
 }
 
 //fetch example

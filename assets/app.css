@@ -63,7 +63,7 @@ h3 {
   padding: 0 5rem;
 }
 
-.login-form fieldset {
+.login-form fieldset, .compose fieldset {
   border: none;
   padding: 0;
   margin: 0;
@@ -136,4 +136,22 @@ h3 {
   left: 40%;
   top: 1rem;
   text-align: center;
+}
+
+/* compose */
+.compose select option {
+  color: #666;
+}
+.dark .form-group.form-textarea label:after {
+  background-color: #212121;
+}
+
+.compose .new-node {
+  position: relative;
+}
+
+.compose .back {
+  position: absolute;
+  right: 0;
+  top: 0;
 }

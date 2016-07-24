@@ -19,6 +19,15 @@
     return timeago.format(value, 'zh_CN');
   });
 
+  // custom elements
+  Vue.component('h-char', {
+    template: '<span><slot></slot></span>'
+  });
+
+    Vue.component('h-inner', {
+    template: '<span><slot></slot></span>'
+  });
+
   // wilddog
 
   var ref = new Wilddog('https://microblog.wilddogio.com/');

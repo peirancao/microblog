@@ -47,25 +47,59 @@ Vue.component('posts-list', {
   data: function () {
     return {
       loading: false,
-      posts: {
-        nid: 1,
-        node: 'default',
-        author: '我',
-        title: '标题',
-        blockquote: '引用',
-        cite: 'https://n2x.in',
-        description: '描述',
-        content: '内容',
-        datetime: '2016-07-20'
-      }
+      posts: {},
+      allPosts: {}
     };
+  },
+  computed: {
+    params: function () {
+      return this.$root.params;
+    }
+  },
+  watch: {
+    'params': function (val, oldVal) {
+      var self = this;
+      if (val.length && val[0].length === 20) {
+        var postsRef = ref.child('posts');
+        postsRef.orderByChild('nid').equalTo(val[0]).on('value', function (snapshot) {
+          var _data = snapshot.val();
+          if (_data) {
+            var _res = [];
+            
+            for (var key in _data) {
+              var _obj = _data[key];
+              var _new = _.assign({}, _obj, { id: key });
+              _res.push(_new);
+            }
+
+            self.posts = _.sortBy(_res, function (o) {
+              return -o.datetime;
+            });
+          } else  {
+            self.posts = {};
+          }
+        });
+      } else {
+        self.posts = self.allPosts;
+      }
+    }
   },
   created: function () {
     var self = this;
     self.loading = true;
     ref.child('posts').on('value', function (snapshot) {
-      // _.reduce()
-      self.posts = snapshot.val();
+      var _data = snapshot.val();
+      var _res = [];
+      
+      for (var key in _data) {
+        var _obj = _data[key];
+        var _new = _.assign({}, _obj, { id: key });
+        _res.push(_new);
+      }
+
+      self.posts = self.allPosts = _.sortBy(_res, function (o) {
+        return -o.datetime;
+      });
       self.loading = false;
     }, function (errorObject) {
       console.log('The read failed: ' + errorObject.code);
@@ -178,6 +212,25 @@ Vue.component('manager', {
       Cookies.remove('__AUTH__DATA__');
       window.location.href = '/';
     }
+  }
+});
+
+// nav component
+Vue.component('main-nav', {
+  template: '#main-nav',
+  data: function () {
+    return {
+      nodes: []
+    };
+  },
+  created: function () {
+    var self = this;
+    var nodesRef = ref.child('nodes');
+    nodesRef.on('value', function (snapshot) {
+      self.nodes = snapshot.val();
+    }, function (errorObject) {
+      console.log('The read failed: ' + errorObject.code);
+    });
   }
 });
 
@@ -375,7 +428,7 @@ var Root = new Vue({
 // router config
 var router = new Router();
 
-router.on('posts', navigate('posts-view'));
+router.on('posts/:id', navigate('posts-view'));
 router.on('post/:id', navigate('post-view'));
 router.on('compose', navigate('compose', true));
 

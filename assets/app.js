@@ -282,7 +282,9 @@ Vue.component('compose', {
         self.loading = false;
 
         self.$root.alert('发布成功', 'success', 3000);
-        self.clearForm(node);
+        setTimeout(function() {
+          self.clearForm(node);
+        }, 0);
       });
 
       if (this.showNewNode) {
@@ -314,21 +316,20 @@ Vue.component('compose', {
         });
       } else {
         var post = {
-            nid: this.nid,
-            ndoe: this.node,
+            nid: self.nid,
+            ndoe: self.node,
             author: '我',
-            title: this.postTitle,
-            blockquote: this.postQuote,
-            cite: this.postCite,
-            description: this.postDescription,
-            content: this.postContent,
+            title: self.postTitle,
+            blockquote: self.postQuote,
+            cite: self.postCite,
+            description: self.postDescription,
+            content: self.postContent,
             datetime: (new Date()).getTime()
         };
-        this.addPost(postsRef, post);
+        self.addPost(postsRef, post);
       }
     },
     addPost: function (ref, post) {
-      console.log(post);
       ref.push(post);
     },
     selectNode: function (e) {
@@ -385,7 +386,6 @@ router.init();
 
 function requireAuth (route) {
   var _list = ['compose'];
-  console.log(route);
   return _list.indexOf(route) > -1;
 }
 

@@ -211,6 +211,7 @@ Vue.component('post-view', {
     var postRef = ref.child('posts/' + nid);
     postRef.on('value', function (snapshot) {
       self.post = snapshot.val();
+      console.log(self.post);
       self.loading = false;
     }, function (errorObject) {
       console.log('The read failed: ' + errorObject.code);
@@ -298,7 +299,7 @@ Vue.component('compose', {
 
           var post = {
               nid: nid,
-              ndoe: _.isString(node) ? node : node.name,
+              node: _.isString(node) ? node : node.name,
               author: '我',
               title: self.postTitle,
               blockquote: self.postQuote,
@@ -317,7 +318,7 @@ Vue.component('compose', {
       } else {
         var post = {
             nid: self.nid,
-            ndoe: self.node,
+            node: self.node,
             author: '我',
             title: self.postTitle,
             blockquote: self.postQuote,

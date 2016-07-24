@@ -204,14 +204,13 @@ Vue.component('post-view', {
       loading: false
     };
   },
-  created: function () {
+  activated: function () {
     var self = this;
     self.loading = true;
     var nid = this.$root.params[0];
     var postRef = ref.child('posts/' + nid);
     postRef.on('value', function (snapshot) {
       self.post = snapshot.val();
-      console.log(self.post);
       self.loading = false;
     }, function (errorObject) {
       console.log('The read failed: ' + errorObject.code);
@@ -240,7 +239,7 @@ Vue.component('compose', {
       nodes: []
     };
   },
-  created: function () {
+  activated: function () {
     var self = this;
     var nodesRef = ref.child('nodes');
     this.viewLoading = true;
@@ -272,44 +271,38 @@ Vue.component('compose', {
       var node = this.node;
       if (this.showNewNode) {
         node = this.newNode;
+      } else {
+        node = this.node;
       }
-
-      postsRef.on('child_added', function (snapshot, error) {
-        if (error !== null) {
-          console.log(error);
-          return false;
-        }
-
+      postsRef.once('child_added', function (snapshot) {
         self.loading = false;
 
         self.$root.alert('发布成功', 'success', 3000);
         setTimeout(function() {
           self.clearForm(node);
         }, 0);
+      }, function (errorObject) {
+        console.log('The read failed: ' + errorObject.code);
       });
 
       if (this.showNewNode) {
-        nodesRef.on('child_added', function (snapshot, error) {
-          if (error !== null) {
-            console.log(error);
-            return false;
-          }
-          node = snapshot.val();
+        nodesRef.once('child_added', function (snapshot) {
           var nid = snapshot.key();
-
           var post = {
               nid: nid,
-              node: _.isString(node) ? node : node.name,
+              node: node,
               author: '我',
               title: self.postTitle,
               blockquote: self.postQuote,
               cite: self.postCite,
               description: self.postDescription,
               content: self.postContent,
-              datetime: _.now()
+              datetime: (new Date()).getTime()
           };
 
           self.addPost(postsRef, post);
+        }, function (errorObject) {
+          console.log('The read failed: ' + errorObject.code);
         });
 
         nodesRef.push({
@@ -335,12 +328,14 @@ Vue.component('compose', {
     },
     selectNode: function (e) {
       var node = e.target.value;
-      var nid = e.target.querySelector('option:checked').id;
       if (node === '创建新节点') {
         this.showSelectNode = false;
         this.showNewNode = true;
       } else {
-        this.nid = nid;
+        if (node) {
+          var nid = e.target.querySelector('option:checked').id;
+          this.nid = nid;
+        }
       }
     },
     goSelectNode: function () {

@@ -210,10 +210,10 @@
   <script id="compose" type="html">
     <div class="compose">
       <div class="loading" v-if="viewLoading"></div>
-      <form class="form" @submit.prevent="submit" v-if="!viewLoading">
+      <form class="form" @submit.prevent.stop="submit" v-if="!viewLoading">
         <fieldset class="form-group" v-show="showSelectNode">
           <label for="node">节点：</label>
-          <select :disabled="loading" id="node" class="form-control" v-model="node" @change="selectNode($event)">
+          <select :disabled="loading" id="node" class="form-control" v-model="node" @change.prevent.stop="selectNode($event)">
             <option v-for="(n, i) in nodes" :id="i">{{ n.name }}</option>
             <option>创建新节点</option>
           </select>

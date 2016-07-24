@@ -22,20 +22,6 @@ Vue.filter('timeago', function (value) {
 
 var ref = new Wilddog('https://microblog.wilddogio.com/');
 
-// ref.child('posts').push({
-//   author: 'peiran',
-//   title: 'title',
-//   description: 'description',
-//   content: 'content',
-//   datetime: 'timeago'
-// });
-
-ref.child('posts').on('value', function (snapshot) {
-  console.log(snapshot.val());
-}, function (errorObject) {
-  console.log('The read failed: ' + errorObject.code);
-});
-
 // alert component
 Vue.component('alert', {
   template: '#alert',
@@ -56,24 +42,34 @@ Vue.component('alert', {
 });
 
 // media list component
-Vue.component('media-list', {
-  template: '#media-list',
-  props: {
-    medias: {
-      type: Array,
-      default: function () {
-        return [
-          {
-            id: 1,
-            author: '我',
-            title: '标题',
-            description: '描述',
-            content: '内容',
-            datetime: '2016-07-20'
-          }
-        ];
+Vue.component('posts-list', {
+  template: '#posts-list',
+  data: function () {
+    return {
+      loading: false,
+      posts: {
+        nid: 1,
+        node: 'default',
+        author: '我',
+        title: '标题',
+        blockquote: '引用',
+        cite: 'https://n2x.in',
+        description: '描述',
+        content: '内容',
+        datetime: '2016-07-20'
       }
-    }
+    };
+  },
+  created: function () {
+    var self = this;
+    self.loading = true;
+    ref.child('posts').on('value', function (snapshot) {
+      self.posts = snapshot.val();
+      self.loading = false;
+    }, function (errorObject) {
+      console.log('The read failed: ' + errorObject.code);
+      self.loading = false;
+    });
   }
 });
 
@@ -194,15 +190,32 @@ Vue.component('post-view', {
   template: '#post-view',
   data: function () {
     return {
-      id: 1,
-      author: '我',
-      title: '标题',
-      blockquote: '引用',
-      cite: 'https://n2x.in',
-      description: '描述',
-      content: '内容',
-      datetime: '2016-07-20'
+      post: {
+        nid: 1,
+        node: 'default',
+        author: '我',
+        title: '标题',
+        blockquote: '引用',
+        cite: 'https://n2x.in',
+        description: '描述',
+        content: '内容',
+        datetime: '2016-07-20',
+      },
+      loading: false
     };
+  },
+  created: function () {
+    var self = this;
+    self.loading = true;
+    var nid = this.$root.params[0];
+    var postRef = ref.child('posts/' + nid);
+    postRef.on('value', function (snapshot) {
+      self.post = snapshot.val();
+      self.loading = false;
+    }, function (errorObject) {
+      console.log('The read failed: ' + errorObject.code);
+      self.loading = false;
+    });
   }
 });
 
@@ -213,25 +226,123 @@ Vue.component('compose', {
     return {
       showSelectNode: true,
       showNewNode: false,
-      node: 'U.S.',
+      node: '生活',
+      nid: '-KNPaBUxa-eqVnL5dNrY',
       newNode: '',
       postTitle: '',
       postDescription: '',
       postContent: '',
       postQuote: '',
-      postCite: ''
+      postCite: '',
+      viewLoading: false,
+      loading: false,
+      nodes: []
     };
   },
+  created: function () {
+    var self = this;
+    var nodesRef = ref.child('nodes');
+    this.viewLoading = true;
+    nodesRef.on('value', function (snapshot) {
+      self.nodes = snapshot.val();
+      self.viewLoading = false;
+    }, function (errorObject) {
+      console.log('The read failed: ' + errorObject.code);
+    });
+  },
   methods: {
+    clearForm: function (node) {
+      this.showSelectNode = true;
+      this.showNewNode = false;
+      this.node = node;
+      this.newNode = '';
+      this.postTitle = '';
+      this.postDescription = '';
+      this.postContent = '';
+      this.postQuote = '';
+      this.postCite = '';
+      this.loading = false;
+    },
+    submit: function () {
+      this.loading = true;
+      var nodesRef = ref.child('nodes');
+      var postsRef = ref.child('posts');
+      var self = this;
+      var node = this.node;
+      if (this.showNewNode) {
+        node = this.newNode;
+      }
+
+      postsRef.on('child_added', function (snapshot, error) {
+        if (error !== null) {
+          console.log(error);
+          return false;
+        }
+
+        self.loading = false;
+
+        self.$root.alert('发布成功', 'success', 3000);
+        self.clearForm(node);
+      });
+
+      if (this.showNewNode) {
+        nodesRef.on('child_added', function (snapshot, error) {
+          if (error !== null) {
+            console.log(error);
+            return false;
+          }
+          node = snapshot.val();
+          var nid = snapshot.key();
+
+          var post = {
+              nid: nid,
+              ndoe: _.isString(node) ? node : node.name,
+              author: '我',
+              title: self.postTitle,
+              blockquote: self.postQuote,
+              cite: self.postCite,
+              description: self.postDescription,
+              content: self.postContent,
+              datetime: _.now()
+          };
+
+          self.addPost(postsRef, post);
+        });
+
+        nodesRef.push({
+          name: node
+        });
+      } else {
+        var post = {
+            nid: this.nid,
+            ndoe: this.node,
+            author: '我',
+            title: this.postTitle,
+            blockquote: this.postQuote,
+            cite: this.postCite,
+            description: this.postDescription,
+            content: this.postContent,
+            datetime: (new Date()).getTime()
+        };
+        this.addPost(postsRef, post);
+      }
+    },
+    addPost: function (ref, post) {
+      console.log(post);
+      ref.push(post);
+    },
     selectNode: function (e) {
       var node = e.target.value;
+      var nid = e.target.querySelector('option:checked').id;
       if (node === '创建新节点') {
         this.showSelectNode = false;
         this.showNewNode = true;
+      } else {
+        this.nid = nid;
       }
     },
     goSelectNode: function () {
-      this.node = 'U.S.';
+      this.node = '生活';
       this.showSelectNode = true;
       this.showNewNode = false;
     }

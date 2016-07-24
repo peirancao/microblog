@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="assets/dark.css?v=0.5.0">
   <link rel="stylesheet" href="assets/Han/han.min.css?v=3.3.0">
   <link rel="stylesheet" href="assets/app.css?v=1.0.0">
-  <script src="assets/do.min.js?v=2.0.0"></script>
+  <script src="assets/do.js?v=2.0.0" data-cfg-corelib="assets/lodash.core.js?v=4.13.1"></script>
 </head>
 
 <body class="hack dark">
@@ -19,7 +19,7 @@
       <h1>一刹那</h1>
       <h2>一期一会，难得一面，世当珍惜</h2>
       <nav>
-        <a href="#/posts">帖子</a>
+        <a href="#/posts">全部</a>
       </nav>
     </header>
 
@@ -78,45 +78,50 @@
   <!-- posts view tpl -->
   <script id="posts-view" type="html">
     <div class="posts-view">
-      <media-list></media-list>
+      <posts-list></posts-list>
     </div>
   </script>
 
   <!-- post view tpl -->
   <script id="post-view" type="html">
     <div class="post-view">
-      <article>
-        <h3>{{ title }}</h3>
+      <div class="loading" v-if="loading"></div>
+      <article v-if="!loading">
+        <h3>{{ post.title }}</h3>
         <header>
-          作者：<u class="pn">{{ author }}</u> 发布时间：
-          <time :datetime="datetime">{{ datetime | timeago }}</time>
+          节点：<span>{{ post.node }}</span> 作者：<u class="pn">{{ post.author }}</u> 发布时间：
+          <time :datetime="post.datetime">{{ post.datetime | timeago }}</time>
         </header>
-        <blockquote :cite="cite">
-          {{ blockquote }}
+        <blockquote :cite="post.cite">
+          {{ post.blockquote }}
+          <a :href="post.cite">
+            <cite>{{ post.cite }}</cite>
+          </a>
         </blockquote>
         <div class="description">
-          {{ description }}
+          {{ post.description }}
         </div>
         <div class="content">
-          {{ content }}
+          {{ post.content }}
         </div>
       </article>
     </div>
   </script>
 
-  <!-- media list tpl -->
-  <script id="media-list" type="html">
-    <div class="media-list">
-      <div class="media" v-for="m in medias" track-by="id">
+  <!-- posts list tpl -->
+  <script id="posts-list" type="html">
+    <div class="posts-list">
+      <div class="loading" v-if="loading"></div>
+      <div v-if="!loading" class="media" v-for="(p, i) in posts" track-by="id">
         <div class="media-left">
-          <div class="avatarholder">{{ m.author }}</div>
+          <div class="avatarholder">{{ p.author }}</div>
         </div>
         <div class="media-body">
           <div class="media-heading">
-            <a :href="'#/post/' + m.id">{{ m.title }}</a>
-            <time :datetime="m.datetime">{{ m.datetime | timeago }}</time>
+            <a :href="'#/post/' + i">{{ p.title }}</a>
+            <time :datetime="p.datetime">{{ p.datetime | timeago }}</time>
           </div>
-          <div class="media-content">{{ m.description }}</div>
+          <div class="media-content">{{ p.description }}</div>
         </div>
       </div>
     </div>
@@ -204,13 +209,12 @@
 
   <script id="compose" type="html">
     <div class="compose">
-      <form class="form">
+      <div class="loading" v-if="viewLoading"></div>
+      <form class="form" @submit.prevent="submit" v-if="!viewLoading">
         <fieldset class="form-group" v-show="showSelectNode">
           <label for="node">节点：</label>
-          <select id="node" class="form-control" v-model="node" @change="selectNode($event)">
-            <option>China</option>
-            <option>U.S.</option>
-            <option>U.K.</option>
+          <select :disabled="loading" id="node" class="form-control" v-model="node" @change="selectNode($event)">
+            <option v-for="(n, i) in nodes" :id="i">{{ n.name }}</option>
             <option>创建新节点</option>
           </select>
         </fieldset>
@@ -238,7 +242,7 @@
           <input id="post-cite" type="url" placeholder="" class="form-control" v-model="postCite">
         </fieldset>
         <div class="form-actions">
-          <button type="button" class="btn btn-default btn-block btn-ghost">发布</button>
+          <button type="submit" :disabled="loading" :class="{ 'disabled': loading }" class="btn btn-default btn-block btn-ghost">发布</button>
         </div>
       </form>
     </div>

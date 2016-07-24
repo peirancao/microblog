@@ -124,7 +124,7 @@ h3 {
   border-color: #ccc!important;
 }
 
-.login-form .form-actions button.disabled, .login-form .form-actions button.disabled:hover {
+.form-actions button.disabled, .login-form .form-actions button.disabled:hover {
   border-color: #333!important;
   color: #333!important;
 }

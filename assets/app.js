@@ -64,9 +64,8 @@ Vue.component('posts-list', {
     var self = this;
     self.loading = true;
     ref.child('posts').on('value', function (snapshot) {
-      self.posts = _.sortBy(snapshot.val(), function (o) {
-        return -o.datetime;
-      });
+      // _.reduce()
+      self.posts = snapshot.val();
       self.loading = false;
     }, function (errorObject) {
       console.log('The read failed: ' + errorObject.code);

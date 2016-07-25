@@ -57,19 +57,24 @@
     data: function () {
       return {
         loading: false,
-        posts: {},
-        allPosts: {}
+        posts: {}
       };
     },
     computed: {
       params: function () {
         return this.$root.params;
+      },
+      auth: function () {
+        if (this.$root.authData !== null) {
+          return true;
+        }
+        return false;
       }
     },
     watch: {
       'params': function (val, oldVal) {
         var self = this;
-        if (val.length && val[0].length === 20) {
+        if (val.length && /^-/.test(val[0])) {
           var postsRef = ref.child('posts');
           postsRef.orderByChild('nid').equalTo(val[0]).on('value', function (snapshot) {
             var _data = snapshot.val();
@@ -90,31 +95,41 @@
             }
           });
         } else {
-          self.posts = self.allPosts;
+          self.loadAll();
         }
       }
     },
     created: function () {
-      var self = this;
-      self.loading = true;
-      ref.child('posts').on('value', function (snapshot) {
-        var _data = snapshot.val();
-        var _res = [];
-        
-        for (var key in _data) {
-          var _obj = _data[key];
-          var _new = _.assign({}, _obj, { id: key });
-          _res.push(_new);
-        }
+      this.loadAll();
+    },
+    methods: {
+      loadAll: function () {
+        var self = this;
+        self.loading = true;
+        ref.child('posts').on('value', function (snapshot) {
+          var _data = snapshot.val();
+          var _res = [];
+          
+          for (var key in _data) {
+            var _obj = _data[key];
+            var _new = _.assign({}, _obj, { id: key });
+            _res.push(_new);
+          }
 
-        self.posts = self.allPosts = _.sortBy(_res, function (o) {
-          return -o.datetime;
+          self.posts = _.sortBy(_res, function (o) {
+            return -o.datetime;
+          });
+          self.loading = false;
+        }, function (errorObject) {
+          console.log('The read failed: ' + errorObject.code);
+          self.loading = false;
         });
-        self.loading = false;
-      }, function (errorObject) {
-        console.log('The read failed: ' + errorObject.code);
-        self.loading = false;
-      });
+      },
+      removePost: function (id) {
+        var postRef = ref.child('posts/' + id);
+        postRef.remove();
+        this.loadAll();
+      }
     }
   });
 
@@ -291,7 +306,7 @@
         showSelectNode: true,
         showNewNode: false,
         node: '生活',
-        nid: '-KNPaBUxa-eqVnL5dNrY',
+        nid: '',
         newNode: '',
         postTitle: '',
         postDescription: '',
@@ -310,8 +325,16 @@
       nodesRef.on('value', function (snapshot) {
         self.nodes = snapshot.val();
         self.viewLoading = false;
+        nodesRef.orderByChild('name').equalTo(self.node).on('value', function (snapshot2) {
+          self.nid = _.keys(snapshot2.val())[0];
+          self.viewLoading = false;
+        }, function (errorObject) {
+          console.log('The read failed: ' + errorObject.code);
+          self.viewLoading = false;
+        });
       }, function (errorObject) {
         console.log('The read failed: ' + errorObject.code);
+        self.viewLoading = false;
       });
     },
     methods: {
@@ -347,14 +370,17 @@
           }, 0);
         }, function (errorObject) {
           console.log('The read failed: ' + errorObject.code);
+          self.loading = false;
         });
 
         if (this.showNewNode) {
+          var newNodeRef = nodesRef.push({
+            name: node
+          });
           nodesRef.once('child_added', function (snapshot) {
-            var nid = snapshot.key();
             var post = {
-                nid: nid,
-                node: node,
+                nid: newNodeRef.key(),
+                node: self.newNode,
                 author: '我',
                 title: self.postTitle,
                 blockquote: self.postQuote,
@@ -367,10 +393,7 @@
             self.addPost(postsRef, post);
           }, function (errorObject) {
             console.log('The read failed: ' + errorObject.code);
-          });
-
-          nodesRef.push({
-            name: node
+            self.loading = false;
           });
         } else {
           var post = {

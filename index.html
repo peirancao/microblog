@@ -113,6 +113,45 @@
           {{ post.content }}
         </div>
       </article>
+      <comments></comments>
+    </div>
+  </script>
+
+  <!-- comments tpl -->
+  <script id="comments" type="html">
+    <div class="comments">
+      <div class="media" v-for="(c, k) in comments">
+        <div class="media-left">
+          <div class="avatarholder">{{ c.author }}</div>
+        </div>
+        <div class="media-body">
+          <div class="media-heading"><time :datetime="c.datetime">{{ c.datetime | timeago }}</time></div>
+          <div class="media-content">{{ c.content }}</div>
+          <div class="media-actions" v-if="auth">
+            <a href="javascript:;" @click="removeComment(k)">删除</a>
+          </div>
+        </div>
+      </div>
+      <div class="media replay" v-show="showReplay">
+        <div class="media-left">
+          <div class="avatarholder">主</div>
+        </div>
+        <div class="media-body">
+          <div class="media-content">
+            <textarea @keydown="postComment($event)" v-model="postContent" id="post-content" rows="1" class="form-control" placeholder="按 Ctrl/Command + Enter 发布"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="media poster" v-show="!showReplay">
+        <div class="media-left">
+          <div class="avatarholder">宾</div>
+        </div>
+        <div class="media-body">
+          <div class="media-content">
+            <textarea @keydown="postReplayComment($event)" v-model="replayContent" id="post-content" rows="1" class="form-control" placeholder="按 Ctrl/Command + Enter 发布"></textarea>
+          </div>
+        </div>
+      </div>
     </div>
   </script>
 
@@ -181,6 +220,7 @@
               </div>
               <div v-show="auth">
                 <a href="#/compose">发布</a>
+                <a href="javascript:;" @click="showReplayBox">回复</a>
                 <a href="javascript:;" @click="logout">退出</a>
               </div>
             </div>

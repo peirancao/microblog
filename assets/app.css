@@ -155,3 +155,7 @@ h3 {
   right: 0;
   top: 0;
 }
+
+.media.poster, .media.replay {
+  margin-top: 7rem;
+}

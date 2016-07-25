@@ -236,6 +236,9 @@
         this.$root.authData = null;
         Cookies.remove('__AUTH__DATA__');
         window.location.href = '/';
+      },
+      showReplayBox: function () {
+        ee.trigger('showReplay');
       }
     }
   });
@@ -295,6 +298,71 @@
         console.log('The read failed: ' + errorObject.code);
         self.loading = false;
       });
+    }
+  });
+
+  // comments component
+  Vue.component('comments', {
+    template: '#comments',
+    data: function () {
+      return {
+        showReplay: false,
+        replayContent: '',
+        postContent: '',
+        comments: {}
+      };
+    },
+    computed: {
+      auth: function () {
+        if (this.$root.authData) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      id: function () {
+        return this.$root.params[0];
+      }
+    },
+    created: function () {
+      var self = this;
+      ee.on('showReplay', function () {
+        self.showReplay = !self.showReplay ;
+      });
+      var commentsRef = ref.child('posts/' + this.id + '/comments');
+      commentsRef.on('value', function (snapshot) {
+        self.comments = snapshot.val();
+        self.postContent = self.replayContent = '';
+      });
+    },
+    methods: {
+      removeComment: function (key) {
+        console.log(key);
+      },
+      postComment: function (e, type) {
+        if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
+          e.preventDefault();
+          var self = this;
+          var commentsRef = ref.child('posts/' + this.id);
+          commentsRef.child('comments').push({
+            content: self.postContent,
+            author: '主',
+            datetime: (new Date()).getTime()
+          });
+        }
+      },
+      postReplayComment: function (e, type) {
+        if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
+          e.preventDefault();
+          var self = this;
+          var commentsRef = ref.child('posts/' + this.id);
+          commentsRef.child('comments').push({
+            content: self.replayContent,
+            author: '宾',
+            datetime: (new Date()).getTime()
+          });
+        }
+      }
     }
   });
 

@@ -128,7 +128,8 @@
           <div class="media-heading">
             <a :href="'#/post/' + p.id">{{ p.title }}</a>
             <time :datetime="p.datetime">{{ p.datetime | timeago }}</time>
-            <a href="javascript:;" v-if="auth" @click="removePost(p.id)">[删除]</a>
+            [<a href="javascript:;" v-if="auth" @click="removePost(p.id)">删除</a>
+            <a :href="'#/compose/' + p.id">修改</a>]
           </div>
           <div class="media-content">{{ p.description }}</div>
         </div>

@@ -315,11 +315,30 @@
         postCite: '',
         viewLoading: false,
         loading: false,
-        nodes: []
+        nodes: [],
+        action: 'add'
       };
     },
     activated: function () {
       var self = this;
+      var params = self.$root.params;
+      if(params.length) {
+        self.action = 'update';
+        var id = params[0];
+        var postRef = ref.child('posts/' + id);
+        postRef.on('value', function (snapshot) {
+          var post = snapshot.val();
+          self.node = post.node;
+          self.postTitle = post.title;
+          self.postQuote = post.blockquote;
+          self.postCite = post.cite;
+          self.postContent = post.content;
+          self.postDescription = post.description;
+        }, function (errorObject) {
+          console.log('The read failed: ' + errorObject.code);
+          self.viewLoading = false;
+        });
+      }
       var nodesRef = ref.child('nodes');
       this.viewLoading = true;
       nodesRef.on('value', function (snapshot) {
@@ -373,14 +392,33 @@
           self.loading = false;
         });
 
-        if (this.showNewNode) {
-          var newNodeRef = nodesRef.push({
-            name: node
-          });
-          nodesRef.once('child_added', function (snapshot) {
+        if (self.action === 'add') {
+          if (this.showNewNode) {
+            var newNodeRef = nodesRef.push({
+              name: node
+            });
+            nodesRef.once('child_added', function (snapshot) {
+              var post = {
+                  nid: newNodeRef.key(),
+                  node: self.newNode,
+                  author: '我',
+                  title: self.postTitle,
+                  blockquote: self.postQuote,
+                  cite: self.postCite,
+                  description: self.postDescription,
+                  content: self.postContent,
+                  datetime: (new Date()).getTime()
+              };
+
+              self.addPost(postsRef, post);
+            }, function (errorObject) {
+              console.log('The read failed: ' + errorObject.code);
+              self.loading = false;
+            });
+          } else {
             var post = {
-                nid: newNodeRef.key(),
-                node: self.newNode,
+                nid: self.nid,
+                node: self.node,
                 author: '我',
                 title: self.postTitle,
                 blockquote: self.postQuote,
@@ -389,25 +427,23 @@
                 content: self.postContent,
                 datetime: (new Date()).getTime()
             };
-
             self.addPost(postsRef, post);
-          }, function (errorObject) {
-            console.log('The read failed: ' + errorObject.code);
-            self.loading = false;
-          });
-        } else {
-          var post = {
-              nid: self.nid,
-              node: self.node,
-              author: '我',
-              title: self.postTitle,
-              blockquote: self.postQuote,
-              cite: self.postCite,
-              description: self.postDescription,
-              content: self.postContent,
-              datetime: (new Date()).getTime()
-          };
-          self.addPost(postsRef, post);
+          }
+        } else if (self.action === 'update') {
+          var _post = {
+                nid: self.nid,
+                node: self.node,
+                author: '我',
+                title: self.postTitle,
+                blockquote: self.postQuote,
+                cite: self.postCite,
+                description: self.postDescription,
+                content: self.postContent,
+                datetime: (new Date()).getTime()
+            };
+            var _id = self.$root.params[0];
+            var _postRef = ref.child('posts/' + _id);
+            _postRef.update(_post);
         }
       },
       addPost: function (ref, post) {
@@ -464,6 +500,7 @@
   router.on('posts/:id', navigate('posts-view'));
   router.on('post/:id', navigate('post-view'));
   router.on('compose', navigate('compose', true));
+  router.on('compose/:id', navigate('compose', true));
 
   router.init();
 

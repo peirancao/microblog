@@ -337,7 +337,9 @@
     },
     methods: {
       removeComment: function (key) {
-        console.log(key);
+        var self = this;
+        var commentRef = ref.child('posts/' + self.id + '/comments/' + key);
+        commentRef.remove();
       },
       postComment: function (e, type) {
         if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {

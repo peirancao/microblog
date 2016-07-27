@@ -10,8 +10,8 @@
   var ee = new EventEmitter();
 
   // vue config
-  Vue.config.debug = true;
-  Vue.config.devtools = true;
+  // Vue.config.debug = true;
+  // Vue.config.devtools = true;
 
   // vue filters
   var timeago = window.timeago();
@@ -292,7 +292,9 @@
       var nid = this.$root.params[0];
       var postRef = ref.child('posts/' + nid);
       postRef.on('value', function (snapshot) {
-        self.post = snapshot.val();
+        if (snapshot.val()) {
+          self.post = snapshot.val();
+        }
         self.loading = false;
       }, function (errorObject) {
         console.log('The read failed: ' + errorObject.code);
@@ -313,6 +315,9 @@
       };
     },
     computed: {
+      params: function () {
+        return this.$root.params;
+      },
       auth: function () {
         if (this.$root.authData) {
           return true;
@@ -324,6 +329,22 @@
         return this.$root.params[0];
       }
     },
+    watch: {
+      'params': function (val, oldVal) {
+        var self = this;
+        if (val.length && /^-/.test(val[0])) {
+          var commentsRef = ref.child('posts/' + val[0] + '/comments');
+          commentsRef.on('value', function (snapshot) {
+            if (snapshot.val()) {
+              self.comments = snapshot.val();
+            } else {
+              self.comments = {};
+            }
+            self.postContent = self.replayContent = '';
+          });
+        }
+      }
+    },
     created: function () {
       var self = this;
       ee.on('showReplay', function () {
@@ -331,7 +352,9 @@
       });
       var commentsRef = ref.child('posts/' + this.id + '/comments');
       commentsRef.on('value', function (snapshot) {
-        self.comments = snapshot.val();
+        if (snapshot.val()) {
+          self.comments = snapshot.val();
+        }
         self.postContent = self.replayContent = '';
       });
     },

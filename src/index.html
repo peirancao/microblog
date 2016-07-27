@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="han-init">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>一刹那</title>
+  <link rel="stylesheet" href="assets/hack.css?v=0.5.0">
+  <link rel="stylesheet" href="assets/dark.css?v=0.5.0">
+  <link rel="stylesheet" href="assets/Han/han.min.css?v=3.3.0">
+  <link rel="stylesheet" href="assets/app.css?v=1.0.0">
+  <script src="assets/do.js?v=2.0.0" data-cfg-corelib="assets/lodash.js?v=4.13.1"></script>
+</head>
+
+<body class="hack dark">
+  <div id="app" class="container">
+    <!-- header  -->
+    <header class="main-header m-b">
+      <h1>一刹那</h1>
+      <h2>一期一会，难得一面，世当珍惜</h2>
+      <main-nav></main-nav>
+    </header>
+
+    <!-- main -->
+    <section>
+      <div class="grid">
+        <!-- main content -->
+        <div class="cell -9of12 main-content m-b">
+          <component :is="currentView" keep-alive></component>
+        </div>
+
+        <!-- main sidebar -->
+        <div class="cell -3of12 main-sidebar m-b">
+          <manager></manager>
+          <div class="card m-b">
+            <header class="card-header">时间</header>
+            <div class="card-content">
+              <div class="inner">
+                <p class="poem-like">
+                  一刹那为一念；<br> 二十念为一瞬；
+                  <br> 二十瞬为一弹指；
+                  <br> 二十弹指为一罗预；
+                  <br> 二十罗预为一须臾；
+                  <br> 一日一夜有三十须臾；
+                  <br> 那么————
+                  <br> 一昼夜有八万六千四百秒；
+                  <br> 一须臾等于二千八百八十秒；
+                  <br> 一弹指等于七点二秒；
+                  <br> 一瞬间等于零点三六秒；
+                  <br> 一刹那却只有零点零一八秒。
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="main-footer">
+      <p class="poem-like">公元二零一六年 ——<u class='pn'>我</u></p>
+    </footer>
+    <alert v-show="showAlert" :type="alertType" :msg="alertMsg"></alert>
+  </div>
+
+  <!-- templates -->
+
+  <!-- main nav tpl -->
+  <script id="main-nav" type="html">
+    <div class="main-nav">
+      <nav>
+        <span><a href="#/posts/all">全部</a> | </span>
+        <span v-for="(n,k) in nodes"><a :href="'#/posts/' + k">{{ n.name }}</a> | </span>
+      </nav>
+    </div>
+  </script>
+
+  <!-- alert tpl -->
+  <script id="alert" type="html">
+    <div class="alert" :class="{ 'alert-success': type === 'success', 'alert-info': type === 'info', 
+      'alert-warning': type === 'warning', 'alert-error': type === 'error' }">
+      {{ msg }}
+    </div>
+  </script>
+
+  <!-- posts view tpl -->
+  <script id="posts-view" type="html">
+    <div class="posts-view">
+      <posts-list></posts-list>
+    </div>
+  </script>
+
+  <!-- post view tpl -->
+  <script id="post-view" type="html">
+    <div class="post-view">
+      <div class="loading" v-if="loading"></div>
+      <article v-if="!loading">
+        <h3>{{ post.title }}</h3>
+        <header>
+          节点：<span>{{ post.node }}</span> 作者：<u class="pn">{{ post.author }}</u> 发布时间：
+          <time :datetime="post.datetime">{{ post.datetime | timeago }}</time>
+        </header>
+        <blockquote :cite="post.cite">
+          {{ post.blockquote }}
+          <a :href="post.cite">
+            <cite>{{ post.cite }}</cite>
+          </a>
+        </blockquote>
+        <div class="description">
+          {{ post.description }}
+        </div>
+        <div class="content">
+          {{ post.content }}
+        </div>
+      </article>
+      <comments></comments>
+    </div>
+  </script>
+
+  <!-- comments tpl -->
+  <script id="comments" type="html">
+    <div class="comments">
+      <div class="media" v-for="(c, k) in comments">
+        <div class="media-left">
+          <div class="avatarholder">{{ c.author }}</div>
+        </div>
+        <div class="media-body">
+          <div class="media-heading"><time :datetime="c.datetime">{{ c.datetime | timeago }}</time></div>
+          <div class="media-content">{{ c.content }}</div>
+          <div class="media-actions" v-if="auth">
+            <a href="javascript:;" @click="removeComment(k)">删除</a>
+          </div>
+        </div>
+      </div>
+      <div class="media replay" v-show="showReplay">
+        <div class="media-left">
+          <div class="avatarholder">主</div>
+        </div>
+        <div class="media-body">
+          <div class="media-content">
+            <textarea @keydown="postComment($event)" v-model="postContent" id="post-content" rows="1" class="form-control" placeholder="按 Ctrl/Command + Enter 发布"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="media poster" v-show="!showReplay">
+        <div class="media-left">
+          <div class="avatarholder">宾</div>
+        </div>
+        <div class="media-body">
+          <div class="media-content">
+            <textarea @keydown="postReplayComment($event)" v-model="replayContent" id="post-content" rows="1" class="form-control" placeholder="按 Ctrl/Command + Enter 发布"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <!-- posts list tpl -->
+  <script id="posts-list" type="html">
+    <div class="posts-list">
+      <div class="loading" v-if="loading"></div>
+      <div v-if="!loading" class="media" v-for="p in posts" track-by="id">
+        <div class="media-left">
+          <div class="avatarholder">{{ p.author }}</div>
+        </div>
+        <div class="media-body">
+          <div class="media-heading">
+            <a :href="'#/post/' + p.id">{{ p.title }}</a>
+            <time :datetime="p.datetime">{{ p.datetime | timeago }}</time>
+            <span v-if="auth">
+              [<a href="javascript:;" @click="removePost(p.id)">删除</a>
+              <a :href="'#/compose/' + p.id">修改</a>]
+            </span>
+          </div>
+          <div class="media-content">{{ p.description }}</div>
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <!-- manager tpl -->
+  <script id="manager" type="html">
+    <div class="manager">
+      <div class="card m-b">
+        <header class="card-header">管理</header>
+        <div class="card-content">
+          <div class="inner">
+            <div class="actions">
+              <div class="grid">
+                <div class="cell -4of12">
+                  <div>
+                    <span class="number">18</span>
+                  </div>
+                  <div class="divider"></div>
+                  <div>
+                    <span>节点</span>
+                  </div>
+                </div>
+                <div class="cell -4of12">
+                  <div>
+                    <span class="number">28</span>
+                  </div>
+                  <div class="divider"></div>
+                  <div>
+                    <span>帖子</span>
+                  </div>
+                </div>
+                <div class="cell -4of12">
+                  <div>
+                    <span class="number">38</span>
+                  </div>
+                  <div class="divider"></div>
+                  <div>
+                    <span>评论</span>
+                  </div>
+                </div>
+              </div>
+              <div v-show="!auth">
+                <a href="javascript:;" @click="login">登录</a>
+              </div>
+              <div v-show="auth">
+                <a href="#/compose">发布</a>
+                <a href="javascript:;" @click="showReplayBox">回复</a>
+                <a href="javascript:;" @click="logout">退出</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <login-form v-show="showLoginForm"></login-form>
+    </div>
+  </script>
+
+  <!-- login form tpl -->
+  <script id="login-form" type="html">
+    <div class="login-form">
+      <form class="form" @submit.prevent="submit">
+        <div class="wrapper">
+          <div class="caption">
+            一刹那
+          </div>
+          <p class="sub-caption">一期一会，世当珍惜</p>
+          <fieldset class="form-group" :class="{ 'form-error': !emailValid, 'form-success': emailValid, 'form-warning': emailDefaultValid }">
+            <input autocomplete="off" id="email" type="email" placeholder="邮箱" class="form-control" v-model="email" @keyup="validateEmail(email)">
+          </fieldset>
+          <fieldset class="form-group" :class="{ 'form-error': !passwordValid, 'form-success': passwordValid, 'form-warning': passwordDefaultValid }">
+            <input id="password" type="password" placeholder="密码" class="form-control" v-model="password" @keyup="validatePassword(password)">
+          </fieldset>
+          <div class="form-actions">
+            <button :disabled="!emailValid || !passwordValid" type="submit" class="btn btn-default btn-ghost btn-block" :class="{ 'disabled': !emailValid || !passwordValid }">
+              <div class="loading" v-show="loading"></div>
+              登录
+            </button>
+          </div>
+        </div>
+      </form>
+      <button type="button" class="close" @click="close">关闭</button>
+    </div>
+  </script>
+
+  <script id="compose" type="html">
+    <div class="compose">
+      <div class="loading" v-if="viewLoading"></div>
+      <form class="form" @submit.prevent.stop="submit" v-if="!viewLoading">
+        <fieldset class="form-group" v-show="showSelectNode">
+          <label for="node">节点：</label>
+          <select :disabled="loading" id="node" class="form-control" v-model="node" @change.prevent.stop="selectNode($event)">
+            <option v-for="(n, i) in nodes" :id="i">{{ n.name }}</option>
+            <option>创建新节点</option>
+          </select>
+        </fieldset>
+        <fieldset class="form-group new-node" v-show="showNewNode">
+          <label for="new-node">新节点：</label>
+          <input id="new-node" type="text" placeholder="" class="form-control" v-model="newNode">
+          <a href="javascript:;" class="back" @click="goSelectNode">返回</a>
+        </fieldset>
+        <fieldset class="form-group">
+          <label for="post-title">标题：</label>
+          <input id="post-title" type="text" placeholder="" class="form-control" v-model="postTitle">
+        </fieldset>
+        <fieldset class="form-group form-textarea">
+          <label for="post-description">描述：</label>
+          <textarea id="post-description" rows="5" class="form-control" v-model="postDescription"></textarea>
+        </fieldset>
+        <fieldset class="form-group form-textarea">
+          <label for="post-content">内容：</label>
+          <textarea id="post-content" rows="5" class="form-control" v-model="postContent"></textarea>
+        </fieldset>
+        <fieldset class="form-group form-textarea">
+          <label for="post-quote">引用：</label>
+          <textarea id="post-quote" rows="5" class="form-control" v-model="postQuote"></textarea>
+          <label for="post-cite">来源：</label>
+          <input id="post-cite" type="url" placeholder="" class="form-control" v-model="postCite">
+        </fieldset>
+        <div class="form-actions">
+          <button type="submit" :disabled="loading" :class="{ 'disabled': loading }" class="btn btn-default btn-block btn-ghost">发布</button>
+        </div>
+      </form>
+    </div>
+  </script>
+
+  <script src="assets/Han/han.min.js?v=3.3.0"></script>
+  <script src="assets/main.js?v=0.0.1"></script>
+</body>
+
+</html>

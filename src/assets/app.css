@@ -1,0 +1,161 @@
+.dark {
+  background-color: rgba(0, 0, 0, .87);
+}
+
+h1 {
+  font-size: 2em!important;
+}
+
+h2 {
+  font-size: 1.5em!important;
+}
+
+h3 {
+  font-size: 1.17em!important;
+}
+
+.m-b {
+  margin-bottom: 2rem!important;
+}
+
+.container {
+  max-width: 77rem;
+}
+
+.main-header {
+  padding-bottom: 2rem!important;
+  border-bottom: 1px solid rgba(95, 95, 95, .78);
+}
+
+.main-content {
+  padding-right: 1.99999999rem;
+}
+
+.main-footer {
+  border-top: 1px solid rgba(95, 95, 95, .78);
+}
+
+.manager .card-content {
+  text-align: center;
+}
+
+.login-form {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(33, 33, 33, .98);
+  z-index: 9;
+}
+
+.login-form form {
+  /*width: 31.75rem;*/
+  background-color: #212121;
+  /*box-shadow: 0 -20px 40px rgba(32,46,71,.05),0 40px 40px rgba(32,46,71,.05);*/
+  box-shadow: 3px 3px 36px 9px #111;
+}
+
+.login-form .wrapper {
+  padding: 0 5rem;
+}
+
+.login-form fieldset, .compose fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 1.75rem;
+}
+
+.login-form .close {
+  position: absolute;
+  top: 3.8rem;
+  right: 3.8rem;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.8rem;
+  outline: none;
+  line-height: 1.3;
+}
+
+.login-form .close:hover {
+  background-color: #ff2e88;
+}
+
+.login-form .caption {
+  font-size: 5rem;
+  text-align: center;
+  line-height: 1.3;
+  height: 5.6666666rem;
+  margin-top: 3.8rem;
+}
+
+.login-form .sub-caption {
+  line-height: 1.3;
+  text-align: center;
+  margin: 0;
+  font-size: 1.5rem;
+  margin-top: 10px;
+  margin-bottom: 3.8rem;
+}
+
+.login-form .form-actions {
+  margin-top: 3.8rem;
+  margin-bottom: 4.5rem;
+}
+
+.login-form .form-group.form-error input {
+  border-color: #f44336!important;
+}
+
+.login-form .form-group.form-success input {
+  border-color: #4caf50!important;
+}
+
+.login-form .form-group.form-warning input {
+  border-color: rgba(95,95,95,.78)!important
+}
+
+.login-form .form-group.form-warning input:focus {
+  border-color: #ccc!important;
+}
+
+.form-actions button.disabled, .login-form .form-actions button.disabled:hover {
+  border-color: #333!important;
+  color: #333!important;
+}
+
+.alert {
+  position: absolute;
+  width: 20%;
+  z-index: 99;
+  left: 40%;
+  top: 1rem;
+  text-align: center;
+}
+
+/* compose */
+.compose select option {
+  color: #666;
+}
+.dark .form-group.form-textarea label:after {
+  background-color: #212121;
+}
+
+.compose .new-node {
+  position: relative;
+}
+
+.compose .back {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.media.poster, .media.replay {
+  margin-top: 7rem;
+}

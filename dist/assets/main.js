@@ -14,6 +14,6 @@ Do.add('wilddog', { path: 'https://cdn.wilddog.com/js/client/current/wilddog.js'
 
 Do.add('vue', { path: 'assets/vue.min.js?v=2.0.0-beta.5', type: 'js' });
 
-Do.add('app', { path: 'assets/app.js?v=0.0.1', type: 'js', requires: ['vue', 'fastclick', 'EventEmitter', 'timeago', 'wilddog', 'js.cookie', 'director', 'fetch'] });
+Do.add('app', { path: 'assets/app.min.js?v=0.0.1', type: 'js', requires: ['vue', 'fastclick', 'EventEmitter', 'timeago', 'wilddog', 'js.cookie', 'director', 'fetch'] });
 
 Do('app');
